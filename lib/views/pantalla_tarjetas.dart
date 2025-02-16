@@ -44,8 +44,7 @@ class _PantallaTarjetasState extends State<PantallaTarjetas> {
                 if (numeroTarjeta.length == 16 && RegExp(r'^\d{16}$').hasMatch(numeroTarjeta)) {
                   setState(() {
                     tarjetas.add({
-                      "numero":
-                      "**** **** **** ${numeroTarjeta.substring(12)}", // Muestra solo los últimos 4 dígitos
+                      "numero": "**** **** **** ${numeroTarjeta.substring(12)}",
                       "congelada": false
                     });
                   });
@@ -80,38 +79,95 @@ class _PantallaTarjetasState extends State<PantallaTarjetas> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text("Mis Tarjetas"), backgroundColor: Colors.lightBlueAccent),
-      body: ListView.builder(
-        itemCount: tarjetas.length,
-        itemBuilder: (context, index) {
-          return Card(
-            child: ListTile(
-              leading: Icon(Icons.credit_card, color: Colors.indigo),
-              title: Text(tarjetas[index]["numero"]),
-              subtitle: Text(
-                tarjetas[index]["congelada"] ? "Estado: Congelada" : "Estado: Activa",
-                style: TextStyle(color: tarjetas[index]["congelada"] ? Colors.red : Colors.green),
-              ),
-              trailing: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  IconButton(
-                    icon: Icon(Icons.ac_unit, color: Colors.blue),
-                    onPressed: () => _congelarTarjeta(index),
-                  ),
-                  IconButton(
-                    icon: Icon(Icons.delete, color: Colors.red),
-                    onPressed: () => _eliminarTarjeta(index),
-                  ),
-                ],
-              ),
-            ),
-          );
-        },
+      body: Container(
+        color: Colors.white, // 📌 Fondo blanco asegurado
+        child: ListView.builder(
+          itemCount: tarjetas.length,
+          itemBuilder: (context, index) {
+            return _buildTarjetaVisual(index);
+          },
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: _mostrarDialogoAgregarTarjeta,
-        backgroundColor: Colors.indigo,
+        backgroundColor: Colors.black,
         child: Icon(Icons.add),
+      ),
+    );
+  }
+
+  Widget _buildTarjetaVisual(int index) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: 10),
+      child: Center( // 📌 Centrar la tarjeta
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.6, // 📌 Ajusta el ancho aquí
+          child: Container(
+            height: 200,
+            decoration: BoxDecoration(
+              color: tarjetas[index]["congelada"] ? Colors.grey[400] : Colors.black,
+              borderRadius: BorderRadius.circular(15),
+              boxShadow: [
+                BoxShadow(color: Colors.black26, blurRadius: 5, spreadRadius: 2),
+              ],
+            ),
+            padding: EdgeInsets.all(20),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                // 📌 Logo de VISA en la parte superior derecha
+                Align(
+                  alignment: Alignment.topRight,
+                  child: Image.asset(
+                    'assests/Mastercard-logo.png', // Asegúrate de que el logo esté en la carpeta assets
+                    height: 40,
+                  ),
+                ),
+
+                // 📌 Número de tarjeta en el centro
+                Center(
+                  child: Text(
+                    tarjetas[index]["numero"],
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 2.0,
+                      color: Colors.white,
+                    ),
+                  ),
+                ),
+
+                // 📌 Estado de la tarjeta y botones de acción
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      tarjetas[index]["congelada"] ? "Tarjeta Congelada" : "Activa",
+                      style: TextStyle(
+                        fontSize: 16,
+                        color: tarjetas[index]["congelada"] ? Colors.red : Colors.greenAccent,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        IconButton(
+                          icon: Icon(Icons.ac_unit, color: Colors.white),
+                          onPressed: () => _congelarTarjeta(index),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.delete, color: Colors.white),
+                          onPressed: () => _eliminarTarjeta(index),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

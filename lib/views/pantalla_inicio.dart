@@ -117,7 +117,7 @@ class PantallaInicio extends StatelessWidget {
             // 📌 Sección de accesos rápidos con fondo celeste
             Container(
               decoration: BoxDecoration(
-                color: Colors.lightBlueAccent.shade100,
+                color: Colors.lightBlueAccent,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
