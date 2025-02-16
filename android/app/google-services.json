@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "50656624356",
+    "project_id": "banca-movil-e373a",
+    "storage_bucket": "banca-movil-e373a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:50656624356:android:a5c9ba17ac8fc5471836f1",
+        "android_client_info": {
+          "package_name": "com.example.banca_movil_final"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzmTZBkDX5oNAMZS9-aG2eM4N7sl4KyOM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
