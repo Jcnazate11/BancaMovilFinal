@@ -87,93 +87,129 @@ class _PantallaHistorialState extends State<PantallaHistorial> {
         title: Text("Historial de Transacciones"),
         backgroundColor: Colors.lightBlueAccent,
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Column(
-              children: [
-                // Selector de fecha
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      body: Container(
+        color: Colors.white, // 📌 Fondo blanco asegurado
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.all(16),
+              child: Column(
+                children: [
+                  // 📌 Selector de fecha
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton.icon(
+                        icon: Icon(Icons.date_range, color: Colors.indigo),
+                        label: Text(
+                          fechaInicio == null
+                              ? "Desde"
+                              : DateFormat("yyyy-MM-dd").format(fechaInicio!),
+                        ),
+                        onPressed: () => _seleccionarFechaInicio(context),
+                      ),
+                      TextButton.icon(
+                        icon: Icon(Icons.date_range, color: Colors.indigo),
+                        label: Text(
+                          fechaFin == null ? "Hasta" : DateFormat("yyyy-MM-dd").format(fechaFin!),
+                        ),
+                        onPressed: () => _seleccionarFechaFin(context),
+                      ),
+                    ],
+                  ),
+
+                  // 📌 Selector de tipo de transacción
+                  DropdownButton<String>(
+                    value: tipoSeleccionado,
+                    hint: Text("Seleccionar tipo"),
+                    isExpanded: true,
+                    items: ["Pago", "Transferencia"].map((String tipo) {
+                      return DropdownMenuItem<String>(
+                        value: tipo,
+                        child: Text(tipo),
+                      );
+                    }).toList(),
+                    onChanged: (nuevoTipo) {
+                      setState(() {
+                        tipoSeleccionado = nuevoTipo;
+                      });
+                      _filtrarTransacciones();
+                    },
+                  ),
+                  SizedBox(height: 10),
+
+                  // 📌 Botón para descargar PDF
+                  ElevatedButton.icon(
+                    onPressed: _descargarResumenPDF,
+                    icon: Icon(Icons.download, color: Colors.white),
+                    label: Text(
+                      "Descargar Resumen PDF",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.indigo,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      padding: EdgeInsets.symmetric(vertical: 12, horizontal: 20),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // 📌 Lista de transacciones filtradas
+            Expanded(
+              child: transaccionesFiltradas.isEmpty
+                  ? Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    TextButton.icon(
-                      icon: Icon(Icons.date_range, color: Colors.indigo),
-                      label: Text(
-                        fechaInicio == null
-                            ? "Desde"
-                            : DateFormat("yyyy-MM-dd").format(fechaInicio!),
-                      ),
-                      onPressed: () => _seleccionarFechaInicio(context),
-                    ),
-                    TextButton.icon(
-                      icon: Icon(Icons.date_range, color: Colors.indigo),
-                      label: Text(
-                        fechaFin == null ? "Hasta" : DateFormat("yyyy-MM-dd").format(fechaFin!),
-                      ),
-                      onPressed: () => _seleccionarFechaFin(context),
-                    ),
+                    Icon(Icons.list_alt, size: 50, color: Colors.grey),
+                    SizedBox(height: 10),
+                    Text("No hay transacciones en este periodo",
+                        style: TextStyle(fontSize: 16, color: Colors.grey)),
                   ],
                 ),
-
-                // Selector de tipo de transacción
-                DropdownButton<String>(
-                  value: tipoSeleccionado,
-                  hint: Text("Seleccionar tipo"),
-                  isExpanded: true,
-                  items: ["Pago", "Transferencia"].map((String tipo) {
-                    return DropdownMenuItem<String>(
-                      value: tipo,
-                      child: Text(tipo),
-                    );
-                  }).toList(),
-                  onChanged: (nuevoTipo) {
-                    setState(() {
-                      tipoSeleccionado = nuevoTipo;
-                    });
-                    _filtrarTransacciones();
-                  },
-                ),
-                SizedBox(height: 10),
-
-                // Botón para descargar PDF
-                ElevatedButton.icon(
-                  onPressed: _descargarResumenPDF,
-                  icon: Icon(Icons.download, color: Colors.white),
-                  label: Text("Descargar Resumen PDF", style: TextStyle(color: Colors.white),),
-                  style: ElevatedButton.styleFrom(backgroundColor: Colors.indigo),
-                ),
-              ],
-            ),
-          ),
-
-          // Lista de transacciones filtradas
-          Expanded(
-            child: transaccionesFiltradas.isEmpty
-                ? Center(child: Text("No hay transacciones en este periodo"))
-                : ListView.builder(
-              itemCount: transaccionesFiltradas.length,
-              itemBuilder: (context, index) {
-                return Card(
-                  child: ListTile(
-                    leading: Icon(
-                      transaccionesFiltradas[index]["tipo"] == "Pago"
-                          ? Icons.payment
-                          : Icons.compare_arrows,
-                      color: transaccionesFiltradas[index]["tipo"] == "Pago"
-                          ? Colors.red
-                          : Colors.green,
+              )
+                  : ListView.builder(
+                itemCount: transaccionesFiltradas.length,
+                itemBuilder: (context, index) {
+                  return Card(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12), // 📌 Bordes redondeados
                     ),
-                    title: Text(
-                        "Monto: \$${transaccionesFiltradas[index]["monto"].toStringAsFixed(2)}"),
-                    subtitle: Text("Fecha: ${transaccionesFiltradas[index]["fecha"]}"),
-                    trailing: Text(transaccionesFiltradas[index]["tipo"]),
-                  ),
-                );
-              },
+                    elevation: 2,
+                    margin: EdgeInsets.symmetric(horizontal: 16, vertical: 5), // 📌 Ajuste de margen
+                    child: ListTile(
+                      leading: Icon(
+                        transaccionesFiltradas[index]["tipo"] == "Pago"
+                            ? Icons.payment
+                            : Icons.compare_arrows,
+                        color: transaccionesFiltradas[index]["tipo"] == "Pago"
+                            ? Colors.red
+                            : Colors.green,
+                      ),
+                      title: Text(
+                        "Monto: \$${transaccionesFiltradas[index]["monto"].toStringAsFixed(2)}",
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Text("Fecha: ${transaccionesFiltradas[index]["fecha"]}"),
+                      trailing: Text(
+                        transaccionesFiltradas[index]["tipo"],
+                        style: TextStyle(
+                          fontSize: 14,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

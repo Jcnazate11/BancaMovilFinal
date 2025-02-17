@@ -36,8 +36,8 @@ class PantallaInicio extends StatelessWidget {
       ),
       drawer: _buildMenuLateral(context), // Menú lateral
       body: Container(
-        color: Colors.white,
         width: double.infinity,
+        color: Colors.white,
         padding: EdgeInsets.all(16.0),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -58,53 +58,72 @@ class PantallaInicio extends StatelessWidget {
               ],
             ),
 
-            // 📌 Tarjeta centrada con saldo y número de cuenta
-            Card(
-              elevation: 3,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(15),
-              ),
-              color: Colors.lightBlueAccent,
-              child: Padding(
-                padding: EdgeInsets.all(20),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Número de cuenta",
-                      style: TextStyle(fontSize: 16, color: Colors.white70),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      numeroCuenta,
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                    SizedBox(height: 15),
-                    Text(
-                      "Saldo Disponible",
-                      style: TextStyle(fontSize: 16, color: Colors.white70),
-                    ),
-                    SizedBox(height: 5),
-                    Text(
-                      "\$${saldoDisponible.toStringAsFixed(2)}",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                      ),
-                    ),
-                  ],
+            // 📌 Logo arriba de la tarjeta con saldo y número de cuenta
+            Column(
+              children: [
+                Image.asset(
+                  'assests/logo_banco.png', // Asegúrate de colocar esta imagen en la carpeta assets
+                  height: 80,
                 ),
-              ),
+                SizedBox(height: 10),
+                SizedBox(
+                  width: MediaQuery.of(context).size.width * 0.6, // Hace que la Card sea más ancha
+                  child: Card(
+                    elevation: 3,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(15),
+                    ),
+                    color: Colors.lightBlueAccent,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 30, vertical: 20), // Más ancho
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Número de cuenta",
+                            style: TextStyle(fontSize: 16, color: Colors.white70),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            numeroCuenta,
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                          SizedBox(height: 15),
+                          Text(
+                            "Saldo Disponible",
+                            style: TextStyle(fontSize: 16, color: Colors.white70),
+                          ),
+                          SizedBox(height: 5),
+                          Text(
+                            "\$${saldoDisponible.toStringAsFixed(2)}",
+                            style: TextStyle(
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
 
-            // 📌 Accesos rápidos en la parte inferior (footer)
-            Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
+            // 📌 Sección de accesos rápidos con fondo celeste
+            Container(
+              decoration: BoxDecoration(
+                color: Colors.lightBlueAccent,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20),
+                  topRight: Radius.circular(20),
+                ),
+              ),
+              padding: EdgeInsets.symmetric(vertical: 20, horizontal: 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -182,11 +201,11 @@ class PantallaInicio extends StatelessWidget {
         children: [
           CircleAvatar(
             radius: 30,
-            backgroundColor: Colors.lightBlueAccent.withOpacity(0.1),
-            child: Icon(icon, size: 30, color: Colors.lightBlueAccent),
+            backgroundColor: Colors.white,
+            child: Icon(icon, size: 30, color: Colors.indigo),
           ),
           SizedBox(height: 8),
-          Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold)),
+          Text(label, style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold, color: Colors.indigo)),
         ],
       ),
     );
